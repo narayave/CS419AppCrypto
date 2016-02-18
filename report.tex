@@ -2,6 +2,7 @@
 
 \usepackage{xparse}
 \usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage{graphicx} % Required for including pictures
 \usepackage{wrapfig} % Allows in-line images
 \usepackage{url}
@@ -11,8 +12,9 @@
 
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-
 \makeatletter
+\newcommand{\mathleft}{\@fleqntrue\@mathmargin0pt}
+\newcommand{\mathcenter}{\@fleqnfalse}
 \renewcommand\@biblabel[1]{\textbf{#1.}} % Change the square brackets for each bibliography item from '[1]' to '1.'
 \renewcommand{\@listI}{\itemsep=0pt} % Reduce the space between items in the itemize and enumerate environments and the bibliography
 
@@ -76,18 +78,30 @@ c_{i}^{k}(x,\textbf{r}) = f_{k}(c_{k}^{i-1}(x,\textbf{r}) \oplus r_{i})
 Th equation is strictly $i > 0$, but the in the case of $i = 0$, $c_{0}^{k}(x,\textbf{r}) = x$. The equation is clever in that it makes sure to XOR different values in every iteration. 
 
 \section*{Lamport+ Signature Scheme}
-Lamport+ Signature Scheme is a new scheme that we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous.\\
-Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport.\\
-To start off, a hash parameter needs to be chosen, $l \in \mathbb{N}$, $l > 0$. \\
-In the Key generation process, 
-
-
+Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport.\\
+% To start off, a hash parameter needs to be chosen, $l \in \mathbb{N}$, $l > 0$. \\
+\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Random element $r \in \{0,1\}^n$ is chosen. The secret key is $sk = ((sk_{0,0}, sk_{0,1}),(sk_{1,0}, sk_{1,1}),...,(sk_{n,0}, sk_{n,1}))$. Each key is $n$-bits long. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n | k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ outputs a $n$-bit value. Public keys are derived by $pk = f_k(sk_{0,1} \oplus r)$. The whole set of $sk$ is run through the hash function, so get a bijective public key set. The public key is the following 
+\mathleft
+\begin{equation}
+\begin{split}
+pk & = ((pk_{0,0}, pk_{0,1}),(pk_{1,0}, pk_{1,1}),...,(pk_{n,0}, pk_{n,1})) \\
+& = ((f_k(sk_{0,0} \oplus r), f_k(sk_{0,1}\oplus r)),(f_k(sk_{1,0} \oplus r), f_k(sk_{1,1}\oplus r)),...,\\
+& \hspace{0.65cm}(f_k(sk_{n,0} \oplus r), f_k(sk_{n,1}\oplus r)))
+\end{split}
+\end{equation}
+\textbf{\textit{Signature Generation}}: The message to be signed is $m$. This messaged is hashed by $h(m) = f_k(m \oplus r)$. The output of the hash is now $n$-bits. Based on every single bit (0 or 1), the corresponding key from a bit pair is selected. These keys make up the signature of the message.\\
+\textbf{\textit{Signature Verification}}: At this point, the verification is almost trivial. The verifier first obtains the hash of the message. Based on the bits of the hash, they pick out the corresponding keys from Public Key of the signer. Now the signature that the signer gave the verifier is hashed, and ideally the values should equal the values that the verifier picked out of the public key. If and when the values don't match is when we know something is wrong. Also, make a note that when something is hashed, the random element is XORed in. Thus, this is something that the signer passes off to the verifier.
 
 \subsection*{Lamport+ Hash Chain}
+Hash chains aid One-Time signatures for 
 Explain how Lamport+ Hash Chain works. It's very, very similar to a normal Hash Chain.
 
 \subsection*{Lamport+ Hash Tree}
+Note that this section hasn't been fully developed the,
 This piece is not fully developed, but explain how it is headed.
+
+\section*{Future Work}
+Similar to technical papers, this section is just a little piece for the future work that we will focus on. Note that this is just a small plan for the way we are going, and it doesn't need to be right one. If it isn't, hopefully our Professor will let us know.
 
 \section*{Benchmark}
 This section is for a little graph of RSA and ECDSA times.

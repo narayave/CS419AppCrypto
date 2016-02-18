@@ -1,11 +1,16 @@
 \documentclass[]{scrartcl}
 
+\usepackage{xparse}
+\usepackage{mathtools}
 \usepackage{graphicx} % Required for including pictures
 \usepackage{wrapfig} % Allows in-line images
 \usepackage{url}
 \usepackage{mathpazo} % Use the Palatino font
 \usepackage[T1]{fontenc} % Required for accented characters
 \linespread{1.05} % Change line spacing here, Palatino benefits from a slight increase by default
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 \makeatletter
 \renewcommand\@biblabel[1]{\textbf{#1.}} % Change the square brackets for each bibliography item from '[1]' to '1.'
@@ -41,19 +46,33 @@
 
 \section*{Introduction}
 Have a brief intro about Digital Signatures. Then talk about the relevance of SPHINCS. Important to make note of how SPHINCS integrates multiple technologies and wraps it all together.
+T
 
 \section*{Details}
 List out the technologies, along with the different dependencies.\\
 Afterwards talk about the ideas that are getting tested out, e.g Lamport+.
 
 \section*{WOTS}
-Explain and go through the example.
+Firstly, it's important to note that the Winternitz signature scheme is one-time. Any amount more and the security of the scheme cannot be promised. The primal idea behind the scheme is having an input run through a hash function several times. The number of iterations entirely depends on the message that needs to be signed.\\
+WOTS was built on top of the Lamport signature scheme, and the expectation is for it to be intuitive in its logic, but it's not the case. The complexity of the scheme is heavily influences by the logic in figuring out the number of iterations necessary for a value to go through the hash function.\\
+The scheme will be briefly be run through here so future references to the scheme are not ambiguous.\\
+\textit{Key Pair Generation}: A Winternitz parameter w $\geq$ 2 is chosen. The parameter signifies the number of bits that'll get processed at a time. The following 
+\begin{equation}
+t_{1} = \ceil*{\frac{n}{w}}, t_{2} = \ceil*{\frac{\lfloor log_2{t_{1}} \rfloor + 1 + w}{w}} , t = t_{1} + t_{2}
+\end{equation}
+
+\textit{Signature Generation}: 
+
+\textit{Signature Verification}: 
 
 \section*{WOTS+}
-Go through example here.
+Like one would expect, WOTS+ is very similar to WOTS, expect for 
 
-\section*{Lamport+}
-Lamport+ essentially is Lamport with pieces of WOTS+ integrated.
+\section*{Lamport+ Signature Scheme}
+Lamport+ Signature Scheme is a new scheme that we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous.\\
+Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. In the Key generation process, 
+
+
 
 \subsection*{Lamport+ Hash Chain}
 Explain how Lamport+ Hash Chain works. It's very, very similar to a normal Hash Chain.
@@ -63,6 +82,9 @@ This piece is not fully developed, but explain how it is headed.
 
 \section*{Benchmark}
 This section is for a little graph of RSA and ECDSA times.
+
+\section*{Challenges}
+The single biggest challenge for us was primarily getting acquainted with the material. To properly, and throughly, understand SPHINCS we needed to get caught up with a lot of reading. There were multiple papers that required time and dedication to fully understand. Understanding the tools and technologies is crucial if we want to be successful. On top of this, we had the added challenge of figuring out how to piece together the technologies, and how SPHINCS uses them.
 
 \section*{Conclusion}
 

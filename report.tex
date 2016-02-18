@@ -1,5 +1,35 @@
 \documentclass[]{scrartcl}
 
+\usepackage{graphicx} % Required for including pictures
+\usepackage{wrapfig} % Allows in-line images
+\usepackage{url}
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Required for accented characters
+\linespread{1.05} % Change line spacing here, Palatino benefits from a slight increase by default
+
+\makeatletter
+\renewcommand\@biblabel[1]{\textbf{#1.}} % Change the square brackets for each bibliography item from '[1]' to '1.'
+\renewcommand{\@listI}{\itemsep=0pt} % Reduce the space between items in the itemize and enumerate environments and the bibliography
+
+\renewcommand{\maketitle}{ % Customize the title - do not edit title and author name here, see the TITLE block below
+	\begin{center} % Right align
+		{\LARGE\@title} % Increase the font size of the title
+		
+		\vspace{15pt} % Some vertical space between the title and author name
+		{\large\@author} % Author name
+		\\\@date % Date
+		
+	\end{center}
+}
+
+\usepackage{xcolor}
+\usepackage{textcomp}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\usepackage{listings}
+
 %opening
 \title{SPHINCS Interim Report}
 \author{Daniel Kirkpatrick\\Vedanth Narayanan}
@@ -10,20 +40,33 @@
 
 
 \section*{Introduction}
-<<<<<<< HEAD
 Have a brief intro about Digital Signatures. Then talk about the relevance of SPHINCS. Important to make note of how SPHINCS integrates multiple technologies and wraps it all together.
 
 \section*{Details}
 List out the technologies, along with the different dependencies.\\
 Afterwards talk about the ideas that are getting tested out, e.g Lamport+.
 
+\section*{WOTS}
+Explain and go through the example.
+
+\section*{WOTS+}
+Go through example here.
+
+\section*{Lamport+}
+Lamport+ essentially is Lamport with pieces of WOTS+ integrated.
+
+\subsection*{Lamport+ Hash Chain}
+Explain how Lamport+ Hash Chain works. It's very, very similar to a normal Hash Chain.
+
+\subsection*{Lamport+ Hash Tree}
+This piece is not fully developed, but explain how it is headed.
+
 \section*{Benchmark}
 This section is for a little graph of RSA and ECDSA times.
-=======
-
-\section*{Details}
->>>>>>> a5bef3096db2ceefae264f367e6e9c7136eec962
 
 \section*{Conclusion}
+
+\section*{References}
+
 
 \end{document}

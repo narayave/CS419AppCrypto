@@ -72,7 +72,7 @@ Th equation is strictly $i > 0$, but in the case of $i = 0$, $c_{0}^{k}(x,\textb
 
 \section*{Lamport+ Signature Scheme}
 Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of the new scheme before we extrapolate it to hash chains.\\ \\
-\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Random element $r \in \{0,1\}^n$ is chosen. The secret key is $sk = ((sk_{0,0}, sk_{0,1}),(sk_{1,0}, sk_{1,1}),...,(sk_{n,0}, sk_{n,1}))$. Each key is $n$-bits long. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n | k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ outputs a $n$-bit value. Public keys are derived by $pk = f_k(sk_{0,1} \oplus r)$. The whole set of $sk$ is run through the hash function, so get a bijective public key set. The public key is the following 
+\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, only a set of Pseudo Random Number Generator seeds will be stored. Let PRNG be $p : \{0,1\}^m \rightarrow \{0,1\}^n \times \{0,1\}^n | m << n$. The secret key is $sk = ((sk_{0,0}, sk_{0,1}),(sk_{1,0}, sk_{1,1}),...,(sk_{n,0}, sk_{n,1}))$. Each key is $n$-bits long. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n | k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ outputs a $n$-bit value. Public keys are derived by $pk = f_k(sk_{0,1} \oplus r)$. The whole set of $sk$ is run through the hash function, so we get a bijective public key set. The public key is the following 
 \mathleft
 \begin{equation}
 \begin{split}
@@ -81,7 +81,7 @@ pk & = ((pk_{0,0}, pk_{0,1}),(pk_{1,0}, pk_{1,1}),...,(pk_{n,0}, pk_{n,1})) \\
 & \hspace{0.65cm}(f_k(sk_{n,0} \oplus r), f_k(sk_{n,1}\oplus r)))
 \end{split}
 \end{equation} \\
-\textbf{\textit{Signature Generation}}: The message to be signed is $m$. This messaged is hashed by $h(m) = f_k(m \oplus r)$. For consistency purposes, we assume that the message size and $r$ are the same. The output of the hash is now $n$-bits. Based on every single bit (0 or 1), the corresponding key from a bit pair is selected from the secret keys. These keys make up the signature of the message.\\ \\
+\textbf{\textit{Signature Generation}}: The hashed message to be signed is $m$. Based on every single bit (0 or 1), the corresponding key from a bit pair is selected from the secret keys. These keys make up the signature of the message.\\ \\
 \textbf{\textit{Signature Verification}}: At this point, the verification is almost trivial. The verifier first obtains the hash of the message (once again, w). Based on the bits of the hash, they pick out the corresponding keys from public key of the signer. Now the signature that the signer gave the verifier is hashed, and ideally the values should equal the values that the verifier picked out of the public key. If and when the values don't match is when we know something is wrong. Also, make a note that when something is hashed, the random element is XORed in. Thus, the random element $r$ is passed off by the signer.
 
 \subsection*{Lamport+ Hash Chain}

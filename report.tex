@@ -73,12 +73,12 @@ Th equation is strictly $i > 0$, but in the case of $i = 0$, $c_{0}^{k}(x,\textb
 \section*{Lamport+ Signature Scheme}
 Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of the new scheme before we extrapolate it to hash chains.\\ \\
 \textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, a set of seeds will be stored, so a Pseudorandom Number Generator(PRNG) can be used to get values whenever needed. Let PRNG be $g : \{0,1\}^m \rightarrow \{0,1\}^n | m < n$. When passed in a seed of size $m$, $g$ will return with a pseudorandom number of size $n$. $s \in \{0,1\}^m$ denotes the seed that will be stored. A unique seed is used for not the key pairs, but the keys themselves. There should be $2n$ seeds total. The secret key is 
-\mathleft
+\mathcenter
 \begin{equation}
 sk = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n) 
 \end{equation}
 Each key is $n$-bits long. Note that there isn't one single seed value $s$, but one for every key. For every pair, the seeds are concatenated; this idea was borrowed from the paper on XMSS by Buchmann et al. The first half is used for $sk_0$, while the second half of the seed is used for $sk_1$. The reasoning behind this becomes apparent when we want to generate our public key. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n | k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ takes in an input of size $n$, and outputs an $n$-bit value. Public keys are derived by $pk = f_k(sk \oplus s)$. The whole set of $sk$ is run through the hash function, so we get a bijective public key set. The public key is the following 
-\mathleft
+\mathcenter
 \begin{equation}
 	\begin{split}
 %		pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
@@ -89,11 +89,11 @@ Each key is $n$-bits long. Note that there isn't one single seed value $s$, but 
 \end{equation} \\
 The seed values that are XORed with the secret keys are indeed seeds, which is why they are run through the PRNG $g$, so a pseudorandom number is XORed with the secret key. Once the values are XORed, then it can be run through the cryptographic hash function to get our public key.\\ \\
 \textbf{\textit{Signature Generation}}: The hashed message to be signed is $M$. Based on every single bit (0 or 1), the corresponding key from a bit pair is selected from the secret keys. These keys make up the signature of the message. For a signature to be properly verified the associated random element needs to be XORed. For the aforementioned reason, the seed for the associated secret key also becomes part of the signature. One may question why seed is not associated with the public key, and despite its validity, there is a justification. This is further explained in the Lamport+ Hash Chain section. The Lamport+ signature, as of now, is  
-\mathleft
+\mathcenter
 \begin{equation}
 \begin{split}
-\sigma_j & = (sk_i, s_i)_j & | & i \in \{0, 1\}, j = 0,...,n \\
-\sigma & = (sk_i, s_i)_0,...,(sk_i, s_i)_n & | & i \in \{0, 1\}
+\sigma_j & = (sk_i, s_i)_j | i \in \{0, 1\}, j = 0,...,n \\
+\sigma & = (sk_i, s_i)_0,...,(sk_i, s_i)_n | i \in \{0, 1\}
 \end{split}
 \end{equation}
 
@@ -102,7 +102,21 @@ The seed values that are XORed with the secret keys are indeed seeds, which is w
 \subsection*{Lamport+ Hash Chain}
 Hash chains aid One-Time signatures to be used multiple times with a single key. This can be applied to the Lamport+ signature scheme. The underlining idea here is that after the public key is generated in the scheme, another set of keys are generated based on the previous public key getting hashed. As you can guess, expect the last public key of the chain, all keys before act as a private key.\\
 There are two important things to make note of here. First off, we introduce a new parameter, which we call $l \in \mathbb{N}$, $l > 0$. This parameter helps keep track of how long the chain is, or many times new public keys have been derived. Secondly, the public keys, along with the keys, hold new PRNG seeds. These seeds will help produce XOR values for the following set of public keys, not to verify the signature that level. This is the reason why the seeds for the signature were not stored with the public key in the previous section.\\ \\
-\textbf{\textit{Key Pair Generation}}: \\
+\textbf{\textit{Key Pair Generation}}: n is once again the number of random pairs that will be generated at a time. Again, PRNG will be $g : \{0,1\}^m \rightarrow \{0,1\}^n | m < n$. The seed is $s \in \{0,1\}^m$. As a remainder, there will exist a seed for every single key in the chain, so $2nl$ seeds total. The first set of secret and public keys are going to be similar to the previous section. The more interesting thing to look at is the chain itself.
+\mathcenter
+\begin{equation}
+\begin{split}
+sk_0 & = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n)\\
+& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+pk_1 & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+pk_2 & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+& \hspace{0.2cm}\vdots \hspace{4cm}\vdots \hspace{4cm}\vdots \\
+pk_l & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+\end{split}
+\end{equation}
+The public key can is
+
 \textbf{\textit{Signature Generation}}: \\
 \textbf{\textit{Signature Verification}}: 
 

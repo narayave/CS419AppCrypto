@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  7 MAR 2016 18:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  7 MAR 2016 19:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -999,18 +999,18 @@ LaTeX Font Info:    Try loading font information for U+fplmbb on input line 104
 (c:/texlive/2014/texmf-dist/tex/latex/psnfss/ufplmbb.fd
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 103--108
+Underfull \hbox (badness 10000) in paragraph at lines 103--107
 
  []
 
 [3] [4] [5] [6] [7] [8]
-Overfull \hbox (14.96455pt too wide) in paragraph at lines 330--331
+Overfull \hbox (14.96455pt too wide) in paragraph at lines 344--345
 []\T1/ppl/m/n/10.95 Merkle, Ralph C. "A cer-ti-fied dig-i-tal sig-na-ture." Ad-
 vances in Cryptology-CRYPTO'89
  []
 
 
-Overfull \hbox (5.3631pt too wide) in paragraph at lines 332--333
+Overfull \hbox (5.3631pt too wide) in paragraph at lines 346--347
 []\T1/ppl/m/n/10.95 Hulsing, An-dreas. "W-OTS+ Shorter sig-na-tures for hash-ba
 sed sig-na-ture schemes."
  []
@@ -1019,7 +1019,7 @@ sed sig-na-ture schemes."
 Here is how much of TeX's memory you used:
  31556 strings out of 493109
  741714 string characters out of 6138581
- 895470 words of memory out of 5000000
+ 895866 words of memory out of 5000000
  34537 multiletter control sequences out of 15000+600000
  29767 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1036,7 +1036,7 @@ xlive/2014/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2014/texm
 f-dist/fonts/type1/urw/palatino/uplbi8a.pfb><c:/texlive/2014/texmf-dist/fonts/t
 ype1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/type1/urw/palati
 no/uplri8a.pfb>
-Output written on report.pdf (9 pages, 139727 bytes).
+Output written on report.pdf (9 pages, 141104 bytes).
 PDF statistics:
  83 PDF objects out of 1000 (max. 8388607)
  60 compressed objects within 1 object stream

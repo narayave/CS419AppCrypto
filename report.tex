@@ -101,24 +101,51 @@ The seed values that are XORed with the secret keys are indeed seeds, which is w
 
 \subsection*{Lamport+ Hash Chain}
 Hash chains aid One-Time signatures to be used multiple times with a single key. This can be applied to the Lamport+ signature scheme. The underlining idea here is that after the public key is generated in the scheme, another set of keys are generated based on the previous public key getting hashed. As you can guess, expect the last public key of the chain, all keys before act as a private key.\\
-There are two important things to make note of here. First off, we introduce a new parameter, which we call $l \in \mathbb{N}$, $l > 0$. This parameter helps keep track of how long the chain is, or many times new public keys have been derived. Secondly, the public keys, along with the keys, hold new PRNG seeds. These seeds will help produce XOR values for the following set of public keys, not to verify the signature that level. This is the reason why the seeds for the signature were not stored with the public key in the previous section.\\ \\
+There are two important things to make note of here. First off, we introduce a new parameter, which we call $l \in \mathbb{N}$, $l > 0$. This parameter helps keep track of how long the chain is, or many times new public keys have been derived. Secondly, the public keys, along with the keys, hold new PRNG seeds. These seeds will help produce XOR values for the following set of public keys, not to verify the signature that level. This is the reason why the seeds for the signature were not stored with the public key in the previous section. Note that the idea here is simple, but transcribing it is tricky. The concept is better understood after going through all the steps.\\ \\
 \textbf{\textit{Key Pair Generation}}: n is once again the number of random pairs that will be generated at a time. Again, PRNG will be $g : \{0,1\}^m \rightarrow \{0,1\}^n | m < n$. The seed is $s \in \{0,1\}^m$. As a remainder, there will exist a seed for every single key in the chain, so $2nl$ seeds total. The first set of secret and public keys are going to be similar to the previous section. The more interesting thing to look at is the chain itself.
 \mathcenter
 \begin{equation}
 \begin{split}
 sk_0 & = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n)\\
 & \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-pk_1 & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+sk_1 & = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n) \\
 & \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-pk_2 & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-& \hspace{0.2cm}\vdots \hspace{4cm}\vdots \hspace{4cm}\vdots \\
-pk_l & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+sk_2 & = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n) \\
+& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
 \end{split}
 \end{equation}
-The public key can is
+As a note, while the idea of secret keys and public keys are intact here, the notations are not. Much of the keys in the hash chain take on both secret and public key roles. 
+\textbf{\textit{Signature Generation}}: \\ \\
+The over arching idea works is after using a secret key, it becomes the public key.
 
-\textbf{\textit{Signature Generation}}: \\
-\textbf{\textit{Signature Verification}}: 
+\mathcenter
+\begin{equation}
+\begin{split}
+& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+sk_{l-1} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+\end{split}
+\end{equation}
+
+The following is what the end of the hash chain would look like. The previous end of the chain is detached and ignored. The new public key for the chain is the secret key of the old public key. By passing off the signature to the verifier at this level, the secret key is given up. To sign another message, the public key will be the current secret key. The chain length will eventually hit 0, and this is when you know you're at the end. Note that this is where the $l$ variable is handy.
+\mathcenter
+\begin{equation}
+\begin{split}
+& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+pk_{old} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n)
+\end{split}
+\end{equation}
+
+
+\textbf{\textit{Signature Verification}}: Compared to both the Key Generation and Signature Generation phases, this particular phase is the most trivial. The single biggest reason is because the verifier does not know about the hash chain. The verifier knows the pubic key, the message, and the signature. This phase is actually exactly the same as from the previous section.
+
 
 %To properly use this hash chain, it's important to know the end of the chain. Imagine the length of the chain is 10. This chain can sign 10 messages. To verify a message, the 9th key down the chain is released. The $l$ parameter should then be decremented. When another message needs to be signed, then the 8th key should be released, and $l$ should be decremented. Once $l$ hits 0, there are no more messages that can be used. The random elements set does not need to be modified, because the subset $r_{1,...,l}$ automatically changes.\\
 

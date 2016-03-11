@@ -71,11 +71,43 @@ c_{k}^{i}(x,\textbf{r}) = f_{k}(c_{k}^{i-1}(x,\textbf{r}) \oplus r_{i})
 Th equation is strictly $i > 0$, but in the case of $i = 0$, $c_{0}^{k}(x,\textbf{r}) = x$. The equation is clever in that it makes sure to XOR different values for every iteration. 
 
 \section*{Lamport+ Signature Scheme}
-Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of the new scheme before we extrapolate it to hash chains.\\ \\
-\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, a set of seeds will be stored, so a Pseudorandom Number Generator (PRNG) can be used to get values whenever needed. Let PRNG be $g : \{0,1\}^m \rightarrow \{0,1\}^n | m < n$. When passed in a seed of size $m$, $g$ will return with a pseudorandom number of size $n$. $s \in \{0,1\}^m$ denotes the seed that will be stored. A unique seed is used for not the key pairs, but the keys themselves. There should be $2n$ seeds total. The secret key is 
+Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of how Lamport+ would work as a One Time Signature, before we extrapolate it to hash chains.\\ \\
+
+\subsection*{Key Generation}
+\textbf{Input:} 
 \mathcenter
 \begin{equation}
-sk = ((sk_0, sk_1, s_0||s_1)_0,(sk_0, sk_1, s_0||s_1)_1,...,(sk_0, sk_1, s_0||s_1)_n) 
+\begin{split}
+Gen(1^n) = sk & : ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) \\
+pk & : ((y_0, y_1)_0,(y_0, y_1)_1,...,(y_0, y_1)_n), \hspace{0.2cm} y_i = f_k(x_i \oplus g(s))
+\end{split}
+\end{equation}
+\textbf{Output:} 
+
+\subsection*{Signature Generation}
+\textbf{Input:} 
+\mathcenter
+\begin{equation}
+\begin{split}
+Sig(sk, M) & = (x_{M_0}, s_{M_0})_0,...,(x_{M_n}, s_{M_n})_n, M_i \in \{0, 1\}
+\end{split}
+\end{equation}
+\textbf{Output:} 
+
+\subsection*{Signature Verification}
+\textbf{Input:} 
+\mathcenter
+\begin{equation}
+\begin{split}
+Ver(pk, M, \sigma) =accept if f \forall i : f(x_i \oplus g(s)) = y_i 
+\end{split}
+\end{equation}
+\textbf{Output:} 
+
+\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, a set of seeds will be stored, so a Pseudorandom Number Generator (PRNG) can be used to get values whenever needed. Let PRNG be $g : \{0,1\}^m \rightarrow \{0,1\}^n | m < n$. When passed in a seed of size $m$, $g$ will return with a pseudorandom number of size $n$. $s \xleftarrow{\$} \{0,1\}^m$ denotes the seed that will be stored. A unique seed is used for not the key pairs, but the keys themselves. There should be $2n$ seeds total. The secret key is 
+\mathcenter
+\begin{equation}
+sk = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) 
 \end{equation}
 Each key is $n$-bits long. Note that there isn't one single seed value $s$, but one for every key. For every pair, the seeds are concatenated; this idea was borrowed from the paper on XMSS by Buchmann et al. The first half is used for $sk_0$, while the second half of the seed is used for $sk_1$. The reasoning behind this becomes apparent when we want to generate our public key. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n | k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ takes in an input of size $n$, and outputs an $n$-bit value. Public keys are derived by $pk = f_k(sk \oplus s)$. The whole set of $sk$ is run through the hash function, so we get a bijective public key set. The public key is
 \mathcenter

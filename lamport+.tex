@@ -85,13 +85,13 @@ Take note of the following variables:
 
 \begin{equation}
 \begin{split}
-\textrm{Iteration: }c^{i}(x) & = f_{k}(x_{1,n} \oplus g(x_{n+1,m})) \\
+\textrm{Iteration: }c^{i}(x) & = f_{k}(x_{1,n} \oplus g(x_{n+1,n+m})) \\
 \textrm{Base case: }c^0(x) & = x_{1,n}
 \end{split}
 \end{equation}
 
 \subsection*{Key Generation}
-\textbf{Input:} Security parameter n
+\vspace{-0.2cm}\hspace{0.5cm}\textbf{Input:} Security parameter n
 \mathcenter
 \begin{equation}
 \begin{split}
@@ -101,33 +101,29 @@ pk & = ((y_{1}^0, y_{1}^{1}),...,(y_{n}^0, y_{n}^{1})) \\
 & = ((c^1_1(x_{1}^0)||s_0,c^1_1(x_{1}^1)||s_1),...(c^1_n(x_{n}^0)||s_0,c^1_n(x_{n}^0)||s_1))\\
 \end{split}
 \end{equation}
-\textbf{Output:} Secret key sk, Public key pk
-
-\mathcenter
-\begin{equation}
-\begin{split}
-Gen(1^n) = sk & : ((x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n), \hspace{0.2cm} s_i \xleftarrow{\$} \{0,1\}^m \\
-pk & : ((y_0, y_1)_1,...,(y_0, y_1)_n), \hspace{0.2cm} y_i = f_k(x_i \oplus g(s_i))
-\end{split}
-\end{equation}
+\hspace{0.5cm}\textbf{Output:} Secret key $sk$, Public key $pk$
 
 \subsection*{Signature Generation}
+\vspace{-0.2cm}\hspace{0.5cm}\textbf{Input:} Secret key $sk$, hashed message $M$
 \mathcenter
 \begin{equation}
 \begin{split}
-Sig(sk, M) = \sigma & : (x_{M_1}, s_{M_1})_1,...,(x_{M_n}, s_{M_n})_n, \hspace{0.2cm} M_i \in \{0, 1\}
+\sigma & = (x^{M_1}_1, ..., x^{M_n}_n), M_i \in \{0,1\} \\
 \end{split}
 \end{equation}
+\hspace{0.5cm}\textbf{Output:} Signature $\sigma$
 
 \subsection*{Signature Verification}
-Input: Public key of signer $pk$, hashed message $M$, and signature $\sigma$.
+\vspace{-0.2cm}\hspace{0.5cm}\textbf{Input:} Public key $pk$, hashed message $M$, and signature $\sigma$.
 \mathcenter
 \begin{equation}
 \begin{split}
-Ver(pk, M, \sigma) =accept \hspace{0.2cm} if \forall i : f(x_i \oplus g(s_i)) = y_i, 1 \leq i \leq n
+pk & = (y^i_1,...,y^i_n) \\
+& \stackrel{?}{=} (c^1_1(x_{1}^i)||\sigma_{n+1,n+m},...,c^1_1(x_{n}^i)||\sigma_{n+1,n+m})
 \end{split}
 \end{equation}
-Output: Signature verified if public key is properly derived from signature, if not verification fails.\\ \\
+\hspace{0.5cm}\textbf{Output:} Verification pass or fail\\ \\
+
 \textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, a set of seeds will be stored, so a Pseudorandom Number Generator (PRNG) can be used to get values whenever needed. Let PRNG be $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$. When passed in a seed of size $m$, $g$ will return with a pseudorandom number of size $n$. $s \xleftarrow{\$} \{0,1\}^m$ denotes the seed that will be stored. A unique seed is used for not the key pairs, but the keys themselves. There should be $2n$ seeds total. The secret key is 
 \mathcenter
 \begin{equation}

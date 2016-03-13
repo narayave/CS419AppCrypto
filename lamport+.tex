@@ -71,8 +71,7 @@ c_{k}^{i}(x,\textbf{r}) = f_{k}(c_{k}^{i-1}(x,\textbf{r}) \oplus r_{i})
 Th equation is strictly $i > 0$, but in the case of $i = 0$, $c_{0}^{k}(x,\textbf{r}) = x$. The equation is clever in that it makes sure to XOR different values for every iteration. 
 
 \section*{Lamport+ Signature Scheme}
-Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of how Lamport+ would work as a One Time Signature, before we extrapolate it to hash chains.\\
-Take note of the following variables:
+Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of how Lamport+ would work as a One Time Signature, before we extrapolate it to hash chains. Take note of the following variables:
 \begin{itemize}
 	\item $i \in \{0,1\}$, denotes bit pair
 	\item $n \in \mathbb{N}$, the security parameter 
@@ -148,65 +147,89 @@ pk & = (y^i_1,...,y^i_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 %\textbf{\textit{Signature Verification}}: The verification for Lamport+ is not as trivial as for Lamport itself. The verifier first obtains the hash of the message (once again, $M$). Based on the bits of the hash, corresponding keys from public key of the signer are chosen. Extra precaution needs to be taken when the signature is hashed to equal the chosen public key. The Lamport+ signature, along with the secret keys themselves, also have a seed with them. Similar to how the signer derived the public key, the verifier will follow suit. The seed will be run through the PRNG $g$, and the result will be XORed with the associated $sk$, and then hashed over $f_k$. Ideally the values should equal the values that the verifier picked out of the public key. If and when the values don't match is when we know something is wrong, and the signature is not verified.
 
 \subsection*{Lamport+ Hash Chain}
-Hash chains aid One-Time signatures to be used multiple times with a single key. This can be applied to the Lamport+ signature scheme. The underlining idea here is that after the public key is generated in the scheme, another set of keys are generated based on the previous public key getting hashed. As you can guess, expect the last public key of the chain, all keys before act as a private key.
-
-There are two important things to make note of here. First off, we introduce a new parameter, which we call $l \in \mathbb{N}$, $l > 0$. This parameter helps keep track of how long the chain is, or how many messages can be signed. Secondly, the public keys will hold new PRNG seeds. These seeds will help produce XOR values for the following set of public keys, and this is not used to verify the signature at that level. This is the reason why the seeds for the signature were not stored with the public key in the previous section.\\
-
-Note that the idea here is simple, but transcribing it is tricky. The concept is better understood once all the steps are explained. The following is a list of variables to keep note of:
-\begin{itemize}
-	\item $n \in \mathbb{N}$, the security parameter 
-	\item $l \in \mathbb{N}$, $l > 0$, the Lamport+ parameter is only known to signer
-	\item Seed $s \in \{0,1\}^m$ is only known to signer until a signature needs to be verified
-	\item PRNG $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$ is publicly known
-	\item Cryographic hash function $f_k : \{0,1\}^n \rightarrow \{0,1\}^n, k \in \mathcal{K}_n$ is also publicly known
-\end{itemize}
-
-\textbf{\textit{Key Pair Generation}}: n is once again the number of random pairs that will be generated at a time. Again, PRNG will be $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$. The seed is $s \in \{0,1\}^m$. As a remainder, there will exist a seed for every single key in the chain, so $2nl$ seeds total. The first set of secret and public keys are going to be similar to the previous section. The more interesting thing to look at is the chain itself.
+Hash chains aid One-Time signatures to be used multiple times with a single key. This can be applied to the Lamport+ signature scheme. The underlying idea here is that after the public key is generated in the scheme, another set of keys are generated based on the previous public key getting hashed. As you can guess, expect the last public key of the chain, all keys before act as a private key.\\
+There are two important things to make note of here. First off, we introduce a new parameter, which we call $l \in \mathbb{N}$, $l > 0$. This parameter helps keep track of how long the chain is, or how many messages can be signed. Secondly, the public keys will hold new PRNG seeds. These seeds will help produce XOR values for the following set of public keys, and this is not used to verify the signature at that level. The concept is better understood once all the steps are explained.\\ \\
+\textbf{\underline{Key Generation}}\\
+\textbf{Input:} Security parameter n \\
+\textbf{Output:} Secret key $sk$, Public key $pk$
 \mathcenter
 \begin{equation}
 \begin{split}
-sk_0 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n)\\
-& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-sk_1 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) \\
-& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-sk_2 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) \\
-& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
-pk & = ((y_0, y_1, s_0||s_1)_0,(y_0, y_1, s_0||s_1)_1,...,(y_0, y_1, s_0||s_1)_n) \\
+sk_l & = ((x_{1}^{0,l}, x_{1}^{1,l}),...,(x_{n}^{0,l}, x_{n}^{1,l}))\\
+& = ((c^l_1(x^{0,l-1}_1)||s_0,c^l_1(x^{1,l-1})||s_1),...,(c^l_n(x^{0,l-1}_n)||s_0,c^l_n(x^{1,l-1})||s_1)), \\
+& \hspace{0.7cm} \textrm{where } s\xleftarrow{\$} \{0,1\}^m \textrm{, and } l, n \in \mathbb{N}\\
+%sk_0 & = ((x_{1}^{0,0}, x_{1}^{1,0}),...,(x_{n}^{0,0}, x_{n}^{1,0}))\\
+%& = ((c^0_1(x)||s_0,c^0_1(x)||s_1),...(c^0_n(x)||s_0,c^0_n(x)||s_1)), x \in \{0,1\}^{n+m}\\
+%sk_1 & = ((x_{1}^0, x_{1}^{1}),...,(y_{n}^0, y_{n}^{1})) \\ 
+%& = ((c^1_1(x_{1}^0)||s_0,c^1_1(x_{1}^1)||s_1),...(c^1_n(x_{n}^0)||s_0,c^1_n(x_{n}^0)||s_1))\\
 \end{split}
 \end{equation}
-As a note, while the idea of secret keys and public keys are intact here, the notations are not. Much of the keys in the hash chain take on both secret and public key roles. \\ \\
-\textbf{\textit{Signature Generation}}: The overarching idea here is once a secret key is released, it becomes the public key for the associated secret key before it. The public key that's correlated with the new public key is essentially detached from the hash chain, and will not be used again.\\
-Like mentioned, a hash chain can sign $l$ number of messages. The trick is to use the last set of secret keys to obtain a signature. To sign a message in the following example, our signature is formed from $sk_{l-1}$. Once a message is signed, $l$ should be decremented, to prevent discrepancies. 
+\textbf{\underline{Signature Generation}}\\
+\textbf{Input:} Secret key $sk$, hashed message $M$, Lamport parameter l \\
+\textbf{Output:} Signature $\sigma$, Updated Lamport parameter l
 \mathcenter
 \begin{equation}
 \begin{split}
-& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
-sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-sk_{l-1} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+\sigma & = (\sigma_1,...,\sigma_n)= (x^{M_1}_1, ..., x^{M_n}_n), M_i \in \{0,1\} \\
 \end{split}
 \end{equation}
-
-The following is what the end of the hash chain would look like after the first message has been signed. The last public key of the chain is detached and ignored. The new public key for the chain is the secret key of the detached public key. By passing off the signature to the verifier at this level, the secret key is given up. To sign another message, the public key will be the current secret key. The chain length, $l$, will eventually hit 0, and this is when you know you're at the end.
+\textbf{\underline{Signature Verification}}\\
+\textbf{Input:} Public key $pk$, hashed message $M$, and signature $\sigma$\\
+\textbf{Output:} Verification pass or fail
 \mathcenter
 \begin{equation}
 \begin{split}
-& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
-sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
-pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-pk_{old} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n)
+pk & = (y^i_1,...,y^i_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...,c^1_1(\sigma_{n})||\sigma_{n+1,n+m})
 \end{split}
 \end{equation}
-This section focused on signature generation in terms of a hash chain. To know how to generate the signatures themselves, refer to the previous section where it is explained in detail.\\ \\
-\textbf{\textit{Signature Verification}}: Compared to both the Key Generation and Signature Generation phases, this particular phase is the most trivial. The single biggest reason is because the verifier does not know about the hash chain. The verifier only has to verify a signature, and the process is very much similar to verifying an original Lamport signature. Using the hashed message $M$, the verifier first picks out the public key set before moving on. The verifier needs to remember that every secret key that makes up the signature has a seed value attached to it. This seed is for the PRNG $g$, which will produce a random value that will get XORed with the key to get the correlated public key. The result should equal what was originally picked out, if not then the signature verification fails.
 
-%To properly use this hash chain, it's important to know the end of the chain. Imagine the length of the chain is 10. This chain can sign 10 messages. To verify a message, the 9th key down the chain is released. The $l$ parameter should then be decremented. When another message needs to be signed, then the 8th key should be released, and $l$ should be decremented. Once $l$ hits 0, there are no more messages that can be used. The random elements set does not need to be modified, because the subset $r_{1,...,l}$ automatically changes.\\
+%
+%\textbf{\textit{Key Pair Generation}}: n is once again the number of random pairs that will be generated at a time. Again, PRNG will be $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$. The seed is $s \in \{0,1\}^m$. As a remainder, there will exist a seed for every single key in the chain, so $2nl$ seeds total. The first set of secret and public keys are going to be similar to the previous section. The more interesting thing to look at is the chain itself.
+%\mathcenter
+%\begin{equation}
+%\begin{split}
+%sk_0 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n)\\
+%& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+%sk_1 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) \\
+%& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+%sk_2 & = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) \\
+%& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+%pk & = ((y_0, y_1, s_0||s_1)_0,(y_0, y_1, s_0||s_1)_1,...,(y_0, y_1, s_0||s_1)_n) \\
+%\end{split}
+%\end{equation}
+%As a note, while the idea of secret keys and public keys are intact here, the notations are not. Much of the keys in the hash chain take on both secret and public key roles. \\ \\
+%\textbf{\textit{Signature Generation}}: The overarching idea here is once a secret key is released, it becomes the public key for the associated secret key before it. The public key that's correlated with the new public key is essentially detached from the hash chain, and will not be used again.\\
+%Like mentioned, a hash chain can sign $l$ number of messages. The trick is to use the last set of secret keys to obtain a signature. To sign a message in the following example, our signature is formed from $sk_{l-1}$. Once a message is signed, $l$ should be decremented, to prevent discrepancies. 
+%\mathcenter
+%\begin{equation}
+%\begin{split}
+%& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+%sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+%& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+%sk_{l-1} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+%& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+%pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+%\end{split}
+%\end{equation}
+%
+%The following is what the end of the hash chain would look like after the first message has been signed. The last public key of the chain is detached and ignored. The new public key for the chain is the secret key of the detached public key. By passing off the signature to the verifier at this level, the secret key is given up. To sign another message, the public key will be the current secret key. The chain length, $l$, will eventually hit 0, and this is when you know you're at the end.
+%\mathcenter
+%\begin{equation}
+%\begin{split}
+%& \hspace{0.2cm}\vdots \hspace{4.15cm}\vdots \hspace{4.15cm}\vdots \\
+%sk_{l-2} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+%& \Downarrow \hspace{4cm}\Downarrow \hspace{4cm}\Downarrow \\
+%pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
+%pk_{old} & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n)
+%\end{split}
+%\end{equation}
+%This section focused on signature generation in terms of a hash chain. To know how to generate the signatures themselves, refer to the previous section where it is explained in detail.\\ \\
+%\textbf{\textit{Signature Verification}}: Compared to both the Key Generation and Signature Generation phases, this particular phase is the most trivial. The single biggest reason is because the verifier does not know about the hash chain. The verifier only has to verify a signature, and the process is very much similar to verifying an original Lamport signature. Using the hashed message $M$, the verifier first picks out the public key set before moving on. The verifier needs to remember that every secret key that makes up the signature has a seed value attached to it. This seed is for the PRNG $g$, which will produce a random value that will get XORed with the key to get the correlated public key. The result should equal what was originally picked out, if not then the signature verification fails.
+%
+%%To properly use this hash chain, it's important to know the end of the chain. Imagine the length of the chain is 10. This chain can sign 10 messages. To verify a message, the 9th key down the chain is released. The $l$ parameter should then be decremented. When another message needs to be signed, then the 8th key should be released, and $l$ should be decremented. Once $l$ hits 0, there are no more messages that can be used. The random elements set does not need to be modified, because the subset $r_{1,...,l}$ automatically changes.\\
 
 \subsection*{Security Considerations}
-
+Why do we XOR?
 
 \subsection*{Lamport+ Hash Tree}
 Note that this section hasn't been fully developed yet, and it is still in the works. If Lamport+ is going to get incorporated into SPHINCS, then it needs to be in a tree fashion. The idea we have is that the leafs of a Binary hash tree have the public keys of the hash chains. If there are four leaves, then there are 4 hash chain associated with each of the leaves. The parent node is a hash of the children hash nodes concatenated with each other, and XORed with a set of random elements for every level. The root node serves is the global public key.\\

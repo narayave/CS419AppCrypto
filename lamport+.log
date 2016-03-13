@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  13 MAR 2016 10:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  13 MAR 2016 12:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -982,60 +982,47 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 69.
-LaTeX Font Info:    Try loading font information for TS1+ppl on input line 77.
+LaTeX Font Info:    Try loading font information for TS1+ppl on input line 76.
 
 (c:/texlive/2014/texmf-dist/tex/latex/psnfss/ts1ppl.fd
 File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
 )
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 78.
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 77.
 
 
 (c:/texlive/2014/texmf-dist/tex/latex/psnfss/ufplmbb.fd
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 90--96
+Underfull \hbox (badness 10000) in paragraph at lines 89--95
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 150--156
 
  []
 
-[3]
-LaTeX Font Info:    Font shape `T1/ppl/bx/it' in size <10.95> not available
-(Font)              Font shape `T1/ppl/b/it' tried instead on input line 164.
-
-Underfull \hbox (badness 10000) in paragraph at lines 176--181
-
- []
-
-[4]
-Underfull \hbox (badness 10000) in paragraph at lines 202--205
-
- []
-
-[5]
-Overfull \hbox (14.96455pt too wide) in paragraph at lines 220--221
+[3] [4]
+Overfull \hbox (14.96455pt too wide) in paragraph at lines 243--244
 []\T1/ppl/m/n/10.95 Merkle, Ralph C. "A cer-ti-fied dig-i-tal sig-na-ture." Ad-
 vances in Cryptology-CRYPTO'89
  []
 
 
-Overfull \hbox (5.3631pt too wide) in paragraph at lines 222--223
+Overfull \hbox (5.3631pt too wide) in paragraph at lines 245--246
 []\T1/ppl/m/n/10.95 Hulsing, An-dreas. "W-OTS+ Shorter sig-na-tures for hash-ba
 sed sig-na-ture schemes."
  []
 
-[6] (./lamport+.aux) ) 
+[5] (./lamport+.aux) ) 
 Here is how much of TeX's memory you used:
- 31003 strings out of 493109
- 725914 string characters out of 6138581
- 862199 words of memory out of 5000000
- 33975 multiletter control sequences out of 15000+600000
- 32340 words of font info for 70 fonts, out of 8000000 for 9000
+ 30999 strings out of 493109
+ 725865 string characters out of 6138581
+ 861199 words of memory out of 5000000
+ 33973 multiletter control sequences out of 15000+600000
+ 30744 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 73i,16n,81p,10381b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 73i,25n,81p,10381b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}{
 c:/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<c:/texlive
 /2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2014/tex
@@ -1045,13 +1032,12 @@ nts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2014/texmf-dist/fonts/type1
 pazo/fplmri.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx120
 0.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/
 texlive/2014/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2014/te
-xmf-dist/fonts/type1/urw/palatino/uplbi8a.pfb><c:/texlive/2014/texmf-dist/fonts
-/type1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/type1/urw/pala
-tino/uplri8a.pfb>
-Output written on lamport+.pdf (6 pages, 137262 bytes).
+xmf-dist/fonts/type1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/
+type1/urw/palatino/uplri8a.pfb>
+Output written on lamport+.pdf (5 pages, 122446 bytes).
 PDF statistics:
- 72 PDF objects out of 1000 (max. 8388607)
- 52 compressed objects within 1 object stream
+ 65 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

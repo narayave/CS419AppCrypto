@@ -71,16 +71,34 @@ c_{k}^{i}(x,\textbf{r}) = f_{k}(c_{k}^{i-1}(x,\textbf{r}) \oplus r_{i})
 Th equation is strictly $i > 0$, but in the case of $i = 0$, $c_{0}^{k}(x,\textbf{r}) = x$. The equation is clever in that it makes sure to XOR different values for every iteration. 
 
 \section*{Lamport+ Signature Scheme}
-Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of how Lamport+ would work as a One Time Signature, before we extrapolate it to hash chains.\\ \\
+Lamport+ Signature Scheme is the new scheme we are proposing. It not only brings the simplicity of the original Lamport scheme, but also pulls in elements of the WOTS+ scheme. Our hope is that the original scheme's security is withheld, if not enhanced. Please note that the security of the proposed scheme has not been proven, but it can very well be inferred from the previous. Similar to how WOTS+ introduces XORing of randomized elements to WOTS, the same principle is introduced to Lamport. The following is meant to give an idea of how Lamport+ would work as a One Time Signature, before we extrapolate it to hash chains.\\
+Take note of the following variables:
+\begin{itemize}
+	\item $i \in \{0,1\}$, denotes bit pair
+	\item $n \in \mathbb{N}$, the security parameter 
+	\item $s \xleftarrow{\$} \{0,1\}^m$, seed for the PRNG
+	\item PRNG $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$
+	\item Cryographic hash function $f_k : \{0,1\}^n \rightarrow \{0,1\}^n, k \in \mathcal{K}$
+\end{itemize}
+
+\textbf{Chaining Function: }The chaining function $c$ is $c : \{0,1\}^{n+m} \rightarrow \{0,1\}^{n}$, and it's meant to aid with the Lamport+ signature scheme. The subscript, assuming $x \in \{0,1\}^n$, indicates a subset of bits from $x$. $x_{a,b}$ indicates working with bits $x_a,...,x_b$.
+
+\begin{equation}
+\begin{split}
+\textrm{Iteration: }c^{i}(x) & = f_{k}(x_{1,n} \oplus g(x_{n+1,m})) \\
+\textrm{Base case: }c^0(x) & = x_{1,n}
+\end{split}
+\end{equation}
 
 \subsection*{Key Generation}
 \textbf{Input:} Security parameter n
 \mathcenter
 \begin{equation}
 \begin{split}
-sk & = ((x_{1}^0, x_{1}^{1}),...,(x_{j}^0, x_{j}^{1})) \\
-& = ((c^1_1(x)||s_0,c^1_1(x)||s_1),...(c^1_j(x)||s_0,c^1_j(x)||s_1)), 1 \leq j \leq n\\
-pk & = ((y_{1}^0, y_{1}^{1}),...,(y_{j}^0, y_{j}^{1})) = 
+sk & = ((x_{1}^0, x_{1}^{1}),...,(x_{n}^0, x_{n}^{1}))\\
+& = ((c^0_1(x)||s_0,c^0_1(x)||s_1),...(c^0_n(x)||s_0,c^0_n(x)||s_1))\\
+pk & = ((y_{1}^0, y_{1}^{1}),...,(y_{n}^0, y_{n}^{1})) \\ 
+& = ((c^1_1(x_{1}^0)||s_0,c^1_1(x_{1}^1)||s_1),...(c^1_n(x_{n}^0)||s_0,c^1_n(x_{n}^0)||s_1))\\
 \end{split}
 \end{equation}
 \textbf{Output:} Secret key sk, Public key pk

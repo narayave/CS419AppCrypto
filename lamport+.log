@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  13 MAR 2016 12:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  13 MAR 2016 18:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1002,14 +1002,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 150--156
 
  []
 
+
+Overfull \hbox (35.08485pt too wide) in paragraph at lines 171--171
+[] 
+ []
+
 [3] [4]
-Overfull \hbox (14.96455pt too wide) in paragraph at lines 243--244
+Overfull \hbox (14.96455pt too wide) in paragraph at lines 204--205
 []\T1/ppl/m/n/10.95 Merkle, Ralph C. "A cer-ti-fied dig-i-tal sig-na-ture." Ad-
 vances in Cryptology-CRYPTO'89
  []
 
 
-Overfull \hbox (5.3631pt too wide) in paragraph at lines 245--246
+Overfull \hbox (5.3631pt too wide) in paragraph at lines 206--207
 []\T1/ppl/m/n/10.95 Hulsing, An-dreas. "W-OTS+ Shorter sig-na-tures for hash-ba
 sed sig-na-ture schemes."
  []
@@ -1018,7 +1023,7 @@ sed sig-na-ture schemes."
 Here is how much of TeX's memory you used:
  30999 strings out of 493109
  725865 string characters out of 6138581
- 861199 words of memory out of 5000000
+ 864199 words of memory out of 5000000
  33973 multiletter control sequences out of 15000+600000
  30744 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1034,7 +1039,7 @@ pazo/fplmri.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx120
 texlive/2014/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2014/te
 xmf-dist/fonts/type1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/
 type1/urw/palatino/uplri8a.pfb>
-Output written on lamport+.pdf (5 pages, 122446 bytes).
+Output written on lamport+.pdf (5 pages, 123333 bytes).
 PDF statistics:
  65 PDF objects out of 1000 (max. 8388607)
  47 compressed objects within 1 object stream

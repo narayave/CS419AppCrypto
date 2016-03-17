@@ -49,7 +49,7 @@
 
 
 \section*{Introduction}
-Over the past 7 weeks, we have been focusing on SPHINCS for our project. Most of the work leading up to the past couple weeks have been reading documents that explain the tools being used in SPHINCS. The single biggest challenge for us was primarily getting acquainted with the material. To properly, and throughly, understand SPHINCS we needed to get caught up with a lot of reading. There were multiple papers that required time and dedication to fully understand. Understanding the tools and technologies is crucial if we want to be successful. On top of this, we had the added challenge of figuring out how to piece together the technologies, and how SPHINCS uses them.\\
+Over the past 10 weeks, we have been focusing on SPHINCS for our project. Most of the work leading up to the past couple weeks have been reading documents that explain the tools being used in SPHINCS. The single biggest challenge for us was primarily getting acquainted with the material. To properly, and throughly, understand SPHINCS we needed to get caught up with a lot of reading. There were multiple papers that required time and dedication to fully understand. Understanding the tools and technologies is crucial if we want to be successful. On top of this, we had the added challenge of figuring out how to piece together the technologies, and how SPHINCS uses them.\\
 While we had a lot of catching up to do, we also did get a chance to work on something new. The actual focus is transcribed in this paper. With help from Professor Yavuz, our goal was to come up with a simpler signature scheme that withheld the security that can be incorporated into SPHINCS. The scheme we propose is called Lamport+.
 
 \section*{Preliminaries}
@@ -118,33 +118,6 @@ pk & = ((y_{1}^0, y_{1}^{1}),...,(y_{n}^0, y_{n}^{1})) \\
 pk & = (y^i_1,...,y^i_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...,c^1_1(\sigma_{n})||\sigma_{n+1,n+m})
 \end{split}
 \end{equation}
-%
-%\textbf{\textit{Key Pair Generation}}: $n$ is the number of random pairs to be generated. Instead of generating random elements and storing them, a set of seeds will be stored, so a Pseudorandom Number Generator (PRNG) can be used to get values whenever needed. Let PRNG be $g : \{0,1\}^m \rightarrow \{0,1\}^n, m < n$. When passed in a seed of size $m$, $g$ will return with a pseudorandom number of size $n$. $s \xleftarrow{\$} \{0,1\}^m$ denotes the seed that will be stored. A unique seed is used for not the key pairs, but the keys themselves. There should be $2n$ seeds total. The secret key is 
-%\mathcenter
-%\begin{equation}
-%sk = ((x_0, x_1, s_0||s_1)_0,(x_0, x_1, s_0||s_1)_1,...,(x_0, x_1, s_0||s_1)_n) 
-%\end{equation}
-%Each key is $n$-bits long. Note that there isn't one single seed value $s$, but one for every key. For every pair, the seeds are concatenated; this idea was borrowed from the paper on XMSS by Buchmann et al. The first half is used for $sk_0$, while the second half of the seed is used for $sk_1$. The reasoning behind this becomes apparent when we want to generate our public key. Let $f_k : \{0,1\}^n \rightarrow \{0,1\}^n, k \in \mathcal{K}_n$. The cryptographic hash function $f_k$ takes in an input of size $n$, and outputs an $n$-bit value. Public keys are derived by $pk = f_k(sk \oplus s)$. The whole set of $sk$ is run through the hash function, so we get a bijective public key set. The public key is
-%\mathcenter
-%\begin{equation}
-%	\begin{split}
-%%		pk & = ((pk_0, pk_1, s_0||s_1)_0,(pk_0, pk_1, s_0||s_1)_1,...,(pk_0, pk_1, s_0||s_1)_n) \\
-%		pk & = ((pk_0, pk_1)_0,(pk_0, pk_1)_1,...,(pk_0, pk_1)_n) \\
-%		& = (f_k(sk_0 \oplus g(s_0)), f_k(sk_1 \oplus g(s_1)))_0,(f_k(sk_0 \oplus g(s_0)), f_k(sk_1 \oplus g(s_1)))_1,...,\\
-%		& \hspace{0.65cm}(f_k(sk_0 \oplus g(s_0)), f_k(sk_1 \oplus g(s_1)))_n) 
-%	\end{split}
-%\end{equation}
-%The seed values that are XORed with the secret keys are indeed seeds, which is why they are run through the PRNG $g$, so a pseudorandom number is XORed with the secret key. Once the values are XORed, then it can be run through the cryptographic hash function to get our public key.\\ \\
-%\textbf{\textit{Signature Generation}}: The hashed message to be signed is $M$. Based on every single bit (0 or 1), the corresponding key from a bit pair is selected from the secret keys. These keys make up the signature of the message. For a signature to be properly verified the associated random element needs to be XORed. For the aforementioned reason, the seed for the associated secret key also becomes part of the signature. One may question why the seed is not just stored with the public key, and despite its validity, there is a justification. This is further explained in the Lamport+ Hash Chain section. The Lamport+ signature, as of now, is  
-%\mathcenter
-%\begin{equation}
-%\begin{split}
-%\sigma_j & = (sk_i, s_i)_j | i \in \{0, 1\}, j = 0,...,n \\
-%\sigma & = (sk_i, s_i)_0,...,(sk_i, s_i)_n | i \in \{0, 1\}
-%\end{split}
-%\end{equation}
-%
-%\textbf{\textit{Signature Verification}}: The verification for Lamport+ is not as trivial as for Lamport itself. The verifier first obtains the hash of the message (once again, $M$). Based on the bits of the hash, corresponding keys from public key of the signer are chosen. Extra precaution needs to be taken when the signature is hashed to equal the chosen public key. The Lamport+ signature, along with the secret keys themselves, also have a seed with them. Similar to how the signer derived the public key, the verifier will follow suit. The seed will be run through the PRNG $g$, and the result will be XORed with the associated $sk$, and then hashed over $f_k$. Ideally the values should equal the values that the verifier picked out of the public key. If and when the values don't match is when we know something is wrong, and the signature is not verified.
 
 \subsection*{Lamport+ Hash Chain}
 Hash chains aid One-Time signatures to be used multiple times with a single key. This can be applied to the Lamport+ signature scheme. The underlying idea here is that after the public key is generated in the scheme, another set of keys are generated based on the previous public key getting hashed. As you can guess, expect the last public key of the chain, all keys before act as a private key.\\
@@ -190,8 +163,31 @@ pk & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 \end{equation}
 
 \subsection*{Lamport+ Hash Tree}
-Note that this section hasn't been fully developed yet, and it is still in the works. If Lamport+ is going to get incorporated into SPHINCS, then it needs to be in a tree fashion. The idea we have is that the leafs of a Binary hash tree have the public keys of the hash chains. If there are four leaves, then there are 4 hash chain associated with each of the leaves. The parent node is a hash of the children hash nodes concatenated with each other, and XORed with a set of random elements for every level. The root node serves is the global public key.\\
-When a signature is used from one of the leaves, then the tree needs to be computed again. Note that the whole tree does not need to be recomputed, but only the path to the specific leaf that used a signature. This idea hasn't been thought over entirely yet, but we believe that it should carry over.
+The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees.
+
+\textbf{\underline{Key Generation}}
+\begin{equation}
+\begin{split}
+0 & = 0
+\end{split}
+\end{equation}
+\textbf{\underline{Signature Generation}}
+\begin{equation}
+\begin{split}
+0 & = 0
+\end{split}
+\end{equation}
+\textbf{\underline{Signature Verification}}
+\begin{equation}
+\begin{split}
+0 & = 0
+\end{split}
+\end{equation}
+
+
+
+%Note that this section hasn't been fully developed yet, and it is still in the works. If Lamport+ is going to get incorporated into SPHINCS, then it needs to be in a tree fashion. The idea we have is that the leafs of a Binary hash tree have the public keys of the hash chains. If there are four leaves, then there are 4 hash chain associated with each of the leaves. The parent node is a hash of the children hash nodes concatenated with each other, and XORed with a set of random elements for every level. The root node serves is the global public key.\\
+%When a signature is used from one of the leaves, then the tree needs to be computed again. Note that the whole tree does not need to be recomputed, but only the path to the specific leaf that used a signature. This idea hasn't been thought over entirely yet, but we believe that it should carry over.
 
 \subsection*{Security Considerations}
 Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed?

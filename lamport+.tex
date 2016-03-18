@@ -163,13 +163,12 @@ pk & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 \end{equation}
 
 \subsection*{Lamport+ Hash Tree}
-The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees. The scheme shown here is loosely based on XMSS trees from [6]. The hash tree allows us to sign 
-One of the most important things to note is that once a signature has been produced from all hash chains, the hash tree needs to be reconstructed. The caveat here is the need to know which leaves have already produced signatures already. An index variable $i$ keep track of the next leaf index to be used, and the signer is required to generate signatures from left to right. Once $i = 2^H-1$, we can determine that signatures for all chains have been used once, and the tree needs to be rehashed using the next set of keys from each of the hash chains.
+The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees. The scheme shown here is loosely based on XMSS trees from [6]. The tree allows us sign $\Big(\sum_{i=0}^{2^H-1} l_i\Big)$ messages, with a single global public key. There are some caveats if the tree is going to be used effectively. Signatures are generated from the leftmost chain to the rightmost. To keep track of what the chain the next signature needs to be generated from, we introduce an index variable $i$. Once $i = 2^H-1$, we can determine that signatures for all chains have been used once, and the tree needs to be rehashed using the next set of keys from each of the hash chains. Keep note of the following:
 \begin{itemize}
 	\item $H$ : Height of tree
-	\item $i$ : Index of node at a level from left to right
+	\item $i$ : Index of a node starts from the left and goes to right
 	\item $f_k : \{0,1\}^{2n} \rightarrow \{0,1\}^n$
-	\item Node : $\{0,1\}^{n+m}$
+	\item $N : \{0,1\}^{n+m}$, stands for Node
 \end{itemize}
 \textbf{\underline{Key Generation}}\\
 Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$ number of Lamport+ hash chains. The hash chains now need to be created. The following equation shows to construct inner nodes. The leaf nodes will be the hashes of the public key of the hash chains, which is the last set of keys in the chain.\\
@@ -178,7 +177,7 @@ Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$
 \begin{equation}
 \begin{split}
 %TODO: Make sure that i looks correct
-Node_{i,h} & = f_k((Node_{i,h-1} \oplus g(s_0))||(Node_{i+1,h-1} \oplus g(s_1))) || s \\
+N_{i,h} & = f_k((N_{i,h-1} \oplus g(s_0))||(N_{i+1,h-1} \oplus g(s_1))) || s \\
 & \textrm{where }0\leq i <2^H, 0 \leq h < H
 \end{split}
 \end{equation}
@@ -186,14 +185,18 @@ Node_{i,h} & = f_k((Node_{i,h-1} \oplus g(s_0))||(Node_{i+1,h-1} \oplus g(s_1)))
 Once a signature is formed, the tree needs to be recalculated, as one of the leaves is going to store a new public key for one of the chains. All nodes on authentication path will be recalculated basically. New seeds stored for parent nodes? Seeds generated every time path needs to be reconstructed.\\
 Before producing signature from a particular chain, make sure $l > 0$, because $l$ dictates how many signatures can be produced from that chain.\\
 \textbf{Input:} Hashed message M\\
-\textbf{Output: Authentication path A, signature $\sigma$, index i}
+\textbf{Output:} Authentication path A, signature $\sigma$, index i
 \begin{equation}
 \begin{split}
- a_h =
- \begin{cases}
- 1, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2\\
- 0, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2
- \end{cases}
+P & = (P_{i,0},...,P_{0,H-1})\\
+%P_{i,h} & = (P_{i,0},...,P_{0,H-1})\\
+A & = (A_0,...,A_{H-1})\\
+%A_h & = 
+%\begin{cases}
+%f_k(P_{h-1}||a_{h-1} \oplus s), & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
+%f_k(a_{h-1}||P_{h-1} \oplus s), & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
+%\end{cases}
+%\\P_0 & = N_{i,0}
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Verification}}\\
@@ -202,7 +205,13 @@ There are two main steps to look out for here. First, using the secret key to ve
 \textbf{Output:} Verification pass or fail\\
 \begin{equation}
 \begin{split}
-0 & = 0
+P_h & =
+\begin{cases}
+f_k((P_{h-1} \oplus g(s))||(a_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
+f_k((a_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
+\end{cases}
+\\ & \textrm{where }0 < h < H
+\\P_0 & = N_{i,0}
 \end{split}
 \end{equation}
 
@@ -210,8 +219,8 @@ There are two main steps to look out for here. First, using the secret key to ve
 %When a signature is used from one of the leaves, then the tree needs to be computed again. Note that the whole tree does not need to be recomputed, but only the path to the specific leaf that used a signature. This idea hasn't been thought over entirely yet, but we believe that it should carry over.
 
 \subsection*{Security Considerations}
-Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed?\\ \\
-Hash tree, new random values generated every time so adversary can't just use previous random values.
+Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed? Key Scheduling and smaller key sizes\\ \\
+Hash tree, new random values generated every time so adversary can't just use previous random values. Since we are going level by level, after half the signatures are produced, an adversary could have a hash already that they try to break with a second preimage.
 
 \section*{Conclusion}
 While an implementation for Lamport+ Hash Tree was created, it definitely can be made better. Given enough time, the algorithm could be optimized to not only be faster, but cut down on costs, and even make a smaller memory footprint. This isn't entirely a promise, but a potential future work that would be worth investing time in.\\ \\

@@ -164,33 +164,48 @@ pk & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 
 \subsection*{Lamport+ Hash Tree}
 The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees.
-
-\textbf{\underline{Key Generation}}
+Lamport+ chains need to be passed in for trees.\\
+2 new variables - H for the height, i for index of the node you are on.\\
+$2^H$ total messages can be signed.
+Even number of hash chains needed for tree to work properly.
+\begin{itemize}
+	\item H - Height of tree
+	\item i - Index of node at a level from left to right
+\end{itemize}
+\textbf{\underline{Key Generation}}\\
+Leaf nodes need to calculated first, so Lamport+ Hash Chains should already exist, and there should be $2^H$ number of chains to make things easy.
+\textbf{Input:} $2^H$ Lamport+ hash chains\\
+\textbf{Output:} Merkle Hash Tree with Lamport+
 \begin{equation}
 \begin{split}
 0 & = 0
 \end{split}
 \end{equation}
-\textbf{\underline{Signature Generation}}
+\textbf{\underline{Signature Generation}}\\
+Once a signature is formed, the tree needs to be recalculated, as one of the leaves is going to store a new public key for one of the chains. All nodes on authentication path will be recalculated basically. New seeds stored for parent nodes? Seeds generated every time path needs to be reconstructed.\\
+\textbf{Input:} Hashed message M\\
+\textbf{Output: }
 \begin{equation}
 \begin{split}
 0 & = 0
 \end{split}
 \end{equation}
-\textbf{\underline{Signature Verification}}
+\textbf{\underline{Signature Verification}}\\
+There are two main steps to look out for here. First, using the secret key to verify the hashed message M. Once the OTS is verified, we have the leaf node for the hash tree. Secondly, traversing the hash tree helps us check the authenticity for the signature. \\
+\textbf{Input:} Authentication path A, signature $\sigma$, hashed message M, Global public key $pk$ when message was signed\\
+\textbf{Output:} Verification pass or fail\\
 \begin{equation}
 \begin{split}
 0 & = 0
 \end{split}
 \end{equation}
-
-
 
 %Note that this section hasn't been fully developed yet, and it is still in the works. If Lamport+ is going to get incorporated into SPHINCS, then it needs to be in a tree fashion. The idea we have is that the leafs of a Binary hash tree have the public keys of the hash chains. If there are four leaves, then there are 4 hash chain associated with each of the leaves. The parent node is a hash of the children hash nodes concatenated with each other, and XORed with a set of random elements for every level. The root node serves is the global public key.\\
 %When a signature is used from one of the leaves, then the tree needs to be computed again. Note that the whole tree does not need to be recomputed, but only the path to the specific leaf that used a signature. This idea hasn't been thought over entirely yet, but we believe that it should carry over.
 
 \subsection*{Security Considerations}
-Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed?
+Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed?\\ \\
+Hash tree, new random values generated every time so adversary can't just use previous random values.
 
 \section*{Conclusion}
 In this report, we presented the Lamport+ Signature Scheme, which is much simpler than WOTS and WOTS+. WOTS+ is currently being used in SPHINCS. SPHINCS is indeed stateless, but if Lamport+ were to be integrated instead, the system would become stateful. We went through an example or two to make sure that the scheme worked and it was possible, but have not spent more time on it. We want to go over it again, and see how it fairs against edge cases and such. The plan is also to try to implement it, and integrate it with SPHINCS to see the results.
@@ -204,6 +219,8 @@ In this report, we presented the Lamport+ Signature Scheme, which is much simple
 	\item Buchmann, Johannes, et al. "CMSS - An improved Merkle signature scheme." Progress in Cryptology-INDOCRYPT 2006. Springer Berlin Heidelberg, 2006. 349-363.
 	\item Buchmann, Johannes, Erik Dahmen, and Andreas Hulsing. "XMSS-a practical forward secure signature scheme based on minimal security assumptions." Post-Quantum Cryptography. Springer Berlin Heidelberg, 2011. 117-129.
 	\item Mihir Bellare and Phillip Rogaway. Collision-resistant hashing: Towards making UOWHFs practical. In Burton Kaliski, editor, Advances in Cryptology - CRYPTO '97, volume 1294 of Lecture Notes in Computer Science, pages 470-484. Springer Berlin / Heidelberg, 1997. 10.1007/BFb0052256.
+	\item Erik Dahmen, Katsuyuki Okeya, Tsuyoshi Takagi, and Camille Vuillaume. Digital signatures out of second-preimage resistant hash functions. In Johannes Buchmann and Jintai Ding, editors, Post-Quantum Cryptography, volume 5299 of Lecture Notes in Computer Science, pages 109--123. Springer Berlin / Heidelberg, 2008.
+	\item Johannes Buchmann, L. C. Coronado Garcia, Erik Dahmen, Martin Doring, and Elena Klintsevich. CMSS -- an improved Merkle signature scheme. In INDOCRYPT, volume 4329 of Lecture Notes in Computer Science, pages 349--363. Springer, 2006.
 \end{enumerate}
 
 \end{document}

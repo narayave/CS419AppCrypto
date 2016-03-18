@@ -163,8 +163,8 @@ pk & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 \end{equation}
 
 \subsection*{Lamport+ Hash Tree}
-The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees.
-Lamport+ chains need to be passed in for trees.\\
+The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees. The scheme shown here is loosely based on XMSS trees from [6].\\
+Lamport+ chains serve as tree leaves.\\
 2 new variables - H for the height, i for index of the node you are on.\\
 $2^H$ total messages can be signed.
 Even number of hash chains needed for tree to work properly.
@@ -173,16 +173,19 @@ Even number of hash chains needed for tree to work properly.
 	\item i - Index of node at a level from left to right
 \end{itemize}
 \textbf{\underline{Key Generation}}\\
-Leaf nodes need to calculated first, so Lamport+ Hash Chains should already exist, and there should be $2^H$ number of chains to make things easy.
-\textbf{Input:} $2^H$ Lamport+ hash chains\\
-\textbf{Output:} Merkle Hash Tree with Lamport+
+Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$ number of Lamport+ hash chains. The hash chains now need to be created. The following equation shows to construct inner nodes. The leaf nodes will be the hashes of the public key of the hash chains, which is the last set of keys in the chain.\\
+\textbf{Input:} $2^H$ hashed public keys of Lamport+ hash chains\\
+\textbf{Output:} Lamport+ Hash Tree
 \begin{equation}
 \begin{split}
-0 & = 0
+%TODO: Make sure that i looks correct
+Node_{i,h} & = f_k((Node_{i,h-1} \oplus g(s_0))||(Node_{i+1,h-1} \oplus g(s_1))) || s \\
+& \textrm{where }0\leq i <2^H, 0 \leq h < H
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Generation}}\\
 Once a signature is formed, the tree needs to be recalculated, as one of the leaves is going to store a new public key for one of the chains. All nodes on authentication path will be recalculated basically. New seeds stored for parent nodes? Seeds generated every time path needs to be reconstructed.\\
+Before producing signature from a particular chain, make sure $l > 0$, because $l$ dictates how many signatures can be produced from that chain.
 \textbf{Input:} Hashed message M\\
 \textbf{Output: }
 \begin{equation}

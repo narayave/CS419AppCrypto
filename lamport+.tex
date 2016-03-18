@@ -163,14 +163,13 @@ pk & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...
 \end{equation}
 
 \subsection*{Lamport+ Hash Tree}
-The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees. The scheme shown here is loosely based on XMSS trees from [6].\\
-Lamport+ chains serve as tree leaves.\\
-2 new variables - H for the height, i for index of the node you are on.\\
-$2^H$ total messages can be signed.
-Even number of hash chains needed for tree to work properly.
+The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Hash Trees. The scheme shown here is loosely based on XMSS trees from [6]. The hash tree allows us to sign 
+One of the most important things to note is that once a signature has been produced from all hash chains, the hash tree needs to be reconstructed. The caveat here is the need to know which leaves have already produced signatures already. An index variable $i$ keep track of the next leaf index to be used, and the signer is required to generate signatures from left to right. Once $i = 2^H-1$, we can determine that signatures for all chains have been used once, and the tree needs to be rehashed using the next set of keys from each of the hash chains.
 \begin{itemize}
-	\item H - Height of tree
-	\item i - Index of node at a level from left to right
+	\item $H$ : Height of tree
+	\item $i$ : Index of node at a level from left to right
+	\item $f_k : \{0,1\}^{2n} \rightarrow \{0,1\}^n$
+	\item Node : $\{0,1\}^{n+m}$
 \end{itemize}
 \textbf{\underline{Key Generation}}\\
 Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$ number of Lamport+ hash chains. The hash chains now need to be created. The following equation shows to construct inner nodes. The leaf nodes will be the hashes of the public key of the hash chains, which is the last set of keys in the chain.\\
@@ -185,12 +184,16 @@ Node_{i,h} & = f_k((Node_{i,h-1} \oplus g(s_0))||(Node_{i+1,h-1} \oplus g(s_1)))
 \end{equation}
 \textbf{\underline{Signature Generation}}\\
 Once a signature is formed, the tree needs to be recalculated, as one of the leaves is going to store a new public key for one of the chains. All nodes on authentication path will be recalculated basically. New seeds stored for parent nodes? Seeds generated every time path needs to be reconstructed.\\
-Before producing signature from a particular chain, make sure $l > 0$, because $l$ dictates how many signatures can be produced from that chain.
+Before producing signature from a particular chain, make sure $l > 0$, because $l$ dictates how many signatures can be produced from that chain.\\
 \textbf{Input:} Hashed message M\\
-\textbf{Output: }
+\textbf{Output: Authentication path A, signature $\sigma$, index i}
 \begin{equation}
 \begin{split}
-0 & = 0
+ a_h =
+ \begin{cases}
+ 1, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2\\
+ 0, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2
+ \end{cases}
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Verification}}\\
@@ -211,6 +214,7 @@ Briefly talk about where and the idea for Lamport+ came about. Why are random va
 Hash tree, new random values generated every time so adversary can't just use previous random values.
 
 \section*{Conclusion}
+While an implementation for Lamport+ Hash Tree was created, it definitely can be made better. Given enough time, the algorithm could be optimized to not only be faster, but cut down on costs, and even make a smaller memory footprint. This isn't entirely a promise, but a potential future work that would be worth investing time in.\\ \\
 In this report, we presented the Lamport+ Signature Scheme, which is much simpler than WOTS and WOTS+. WOTS+ is currently being used in SPHINCS. SPHINCS is indeed stateless, but if Lamport+ were to be integrated instead, the system would become stateful. We went through an example or two to make sure that the scheme worked and it was possible, but have not spent more time on it. We want to go over it again, and see how it fairs against edge cases and such. The plan is also to try to implement it, and integrate it with SPHINCS to see the results.
 
 \section*{References}

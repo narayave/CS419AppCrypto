@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  18 MAR 2016 06:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2015.3.31)  18 MAR 2016 09:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1008,57 +1008,63 @@ Overfull \hbox (35.08485pt too wide) in paragraph at lines 144--144
  []
 
 [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 195--200
+Underfull \hbox (badness 10000) in paragraph at lines 198--203
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 210--212
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
 
  []
 
 
-Overfull \hbox (14.96455pt too wide) in paragraph at lines 218--219
+Underfull \hbox (badness 10000) in paragraph at lines 217--219
+
+ []
+
+[5]
+Overfull \hbox (14.96455pt too wide) in paragraph at lines 222--223
 []\T1/ppl/m/n/10.95 Merkle, Ralph C. "A cer-ti-fied dig-i-tal sig-na-ture." Ad-
 vances in Cryptology-CRYPTO'89
  []
 
-[5]
-Overfull \hbox (5.3631pt too wide) in paragraph at lines 220--221
+
+Overfull \hbox (5.3631pt too wide) in paragraph at lines 224--225
 []\T1/ppl/m/n/10.95 Hulsing, An-dreas. "W-OTS+ Shorter sig-na-tures for hash-ba
 sed sig-na-ture schemes."
  []
 
 
-Overfull \hbox (6.88422pt too wide) in paragraph at lines 226--227
+Overfull \hbox (6.88422pt too wide) in paragraph at lines 230--231
 \T1/ppl/m/n/10.95 Elena Klint-se-vich. CMSS -- an im-proved Merkle sig-na-ture 
 scheme. In IN-DOCRYPT,
  []
 
-[6] (./lamport+.aux) ) 
+[6] [7] (./lamport+.aux) ) 
 Here is how much of TeX's memory you used:
- 30999 strings out of 493109
- 725865 string characters out of 6138581
- 864198 words of memory out of 5000000
- 33973 multiletter control sequences out of 15000+600000
- 30744 words of font info for 68 fonts, out of 8000000 for 9000
+ 31005 strings out of 493109
+ 725906 string characters out of 6138581
+ 864199 words of memory out of 5000000
+ 33975 multiletter control sequences out of 15000+600000
+ 31657 words of font info for 72 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  73i,25n,81p,10381b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
-{c:/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}{
-c:/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<c:/texlive
-/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2014/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2014/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2014/texmf-dist/fonts/type1
-/public/mathpazo/fplmbb.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/math
-pazo/fplmri.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx120
-0.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/
-texlive/2014/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2014/te
-xmf-dist/fonts/type1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/
-type1/urw/palatino/uplri8a.pfb>
-Output written on lamport+.pdf (6 pages, 127317 bytes).
+{c:/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.e
+nc}{c:/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<c:/tex
+live/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2014
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2014/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2014/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2014/texmf-dist/fonts/type1/publ
+ic/mathpazo/fplmbb.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/mathpazo/
+fplmri.pfb><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb
+><c:/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/texli
+ve/2014/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2014/texmf-d
+ist/fonts/type1/urw/palatino/uplr8a.pfb><c:/texlive/2014/texmf-dist/fonts/type1
+/urw/palatino/uplri8a.pfb>
+Output written on lamport+.pdf (7 pages, 137209 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
- 49 compressed objects within 1 object stream
+ 77 PDF objects out of 1000 (max. 8388607)
+ 56 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

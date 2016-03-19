@@ -197,23 +197,22 @@ f_k((N_{2i,h-1} \oplus g(s_{2i,h-1}))||\sigma_i)||s_{i,h} & ,\textrm{right child
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Verification}}\\
-There are two main steps to look out for here. First, using the secret key to verify the hashed message M. Once the OTS is verified, we have the leaf node for the hash tree. Secondly, traversing the hash tree helps us check the authenticity for the signature. \\
-\textbf{Input:} Authentication path A, signature $\sigma$, hashed message M, Global public key $pk$ when message was signed\\
+There are two main steps to look out for here. First, verifying the Lamport+ OTS using the signature that is passed in. Secondly, traversing the hash tree to help check the authenticity for the signature.\\
+\textbf{Input:} Authentication path A, signature $\sigma$, index i, hashed message M, root node of hash tree $pk$\\
 \textbf{Output:} Verification pass or fail\\
 \begin{equation}
 \begin{split}
+sk_l & = (y^l_1,...,y^l_n) \stackrel{?}{=}(c^1_1(\sigma_{1})||\sigma_{n+1,n+m},...,c^1_1(\sigma_{n})||\sigma_{n+1,n+m})\\
 P_h & =
 \begin{cases}
 f_k((P_{h-1} \oplus g(s))||(A_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
 f_k((A_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
 \end{cases}
-\\ & \textrm{where }0 < h < H
-\\P_0 & = N_{i,0}
+\\ & \textrm{where }0 \leq h < H\\
+P_0 & = N_{i,0}\\
+pk & \stackrel{?}{=} P_{H-1}
 \end{split}
 \end{equation}
-
-%Note that this section hasn't been fully developed yet, and it is still in the works. If Lamport+ is going to get incorporated into SPHINCS, then it needs to be in a tree fashion. The idea we have is that the leafs of a Binary hash tree have the public keys of the hash chains. If there are four leaves, then there are 4 hash chain associated with each of the leaves. The parent node is a hash of the children hash nodes concatenated with each other, and XORed with a set of random elements for every level. The root node serves is the global public key.\\
-%When a signature is used from one of the leaves, then the tree needs to be computed again. Note that the whole tree does not need to be recomputed, but only the path to the specific leaf that used a signature. This idea hasn't been thought over entirely yet, but we believe that it should carry over.
 
 \subsection*{Security Considerations}
 Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed? Key Scheduling and smaller key sizes\\ \\

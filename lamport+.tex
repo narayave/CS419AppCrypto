@@ -197,7 +197,7 @@ f_k((N_{2i,h-1} \oplus g(s_{2i,h-1}))||\sigma_i)||s_{i,h} & ,\textrm{right child
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Verification}}\\
-There are two main steps to look out for here. First, verifying the Lamport+ OTS using the signature that is passed in. Secondly, traversing the hash tree to help check the authenticity for the signature.\\
+There are two main steps to look out for here. First, verifying the Lamport+ OTS using the signature that is passed in. Secondly, traversing the hash tree to help check the authenticity for the signature. This algorithm was created with help from [6] and [8].\\
 \textbf{Input:} Authentication path A, signature $\sigma$, index i, hashed message M, root node of hash tree $pk$\\
 \textbf{Output:} Verification pass or fail\\
 \begin{equation}
@@ -208,19 +208,37 @@ P_h & =
 f_k((P_{h-1} \oplus g(s))||(A_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
 f_k((A_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
 \end{cases}
-\\ & \textrm{where }0 \leq h < H\\
+,\\ & \textrm{where }0 \leq h < H\\
 P_0 & = N_{i,0}\\
 pk & \stackrel{?}{=} P_{H-1}
 \end{split}
 \end{equation}
 
 \subsection*{Security Considerations}
-Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed? Key Scheduling and smaller key sizes\\ \\
+The idea started by looking at the differences between WOTS and WOTS+. They are very similar, so the difference between them is really what makes WOTS+ more secure than the other. The difference all comes down to the fact that WOTS+ performs an Exclusive OR (XOR) operation before a value is hashed. Our job was to take that idea and apply it to Lamport, and ideally the security would be enhanced.
+
+One of the most \textit{elusive} questions in the project was why the authors of WOTS+ XORed random values before hashing values. Even after thoroughly reading the paper multiple times the reason for XORing random values and the security enhancement are not explained. We found out that the paper on XMSS was written only a couple of years before WOTS+, and the author of WOTS+ also coauthored the XMSS paper. It is in XMSS that the idea for XORing random values came from for WOTS+. This operation, once again, is not properly explained in XMSS. The only reference to the bitmasks points to "Collision-resistant hashing: Towards making UOWHFs practical"[7], written by Mihir Bellare and Phillip Rogaway. It was clear that the XOR trick came from them. They have collectively written multiple papers on collision resistant hashing, and key hashing functions. Upon looking through some of the papers, it seemed to first come about in "Keying Hash Functions for Message Authentication" in 1996. This idea was suggested to them by Adi Shamir, one of the cofounders of RSA. Despite the origins of the idea, the thing to take note of is the variety of ways it gets used.
+
+There are two reasons why random values are XORed in the collision-resistant hashing paper. The first reason being able to bring down the key sizes. The more interesting reason is for key scheduling, especially when it comes to compression functions. From our understanding, setting up keys for compression functions can be tedious, so the XOR operations helps with 
+\begin{equation}
+\begin{split}
+\begin{cases}
+XLH_{K,K_1,...,K_j}(M_1,...,M_j) & =  XLH_{K,K_1,...,K_j}(M'_1,...,M'_j)\\
+XLH_{K,K_1,...,K_{j-1}}(M_1,...,M_{j-1}) & \neq XLH_{K,K_1,...,K_{j-1}}(M'_1,...,M'_{j-1}) || M'_j\\
+\end{cases}
+\end{split}
+\end{equation}
+
+Although, the security of our scheme has not been formally proven we can infer its security.
+
 Hash tree, new random values generated every time so adversary can't just use previous random values. Since we are going level by level, after half the signatures are produced, an adversary could have a hash already that they try to break with a second preimage.
 Before next 
 
 \section*{Conclusion}
 While an implementation for Lamport+ Hash Tree was created, it definitely can be made better. Given enough time, the algorithm could be optimized to not only be faster, but cut down on costs, and even make a smaller memory footprint. This isn't entirely a promise, but a potential future work that would be worth investing time in.\\ \\
+
+We presented the Lamport+ Signature Scheme, along with hash chains and hash trees, in this report. The scheme itself is much simpler than both WOTS and WOTS+. 
+
 In this report, we presented the Lamport+ Signature Scheme, which is much simpler than WOTS and WOTS+. WOTS+ is currently being used in SPHINCS. SPHINCS is indeed stateless, but if Lamport+ were to be integrated instead, the system would become stateful. We went through an example or two to make sure that the scheme worked and it was possible, but have not spent more time on it. We want to go over it again, and see how it fairs against edge cases and such. The plan is also to try to implement it, and integrate it with SPHINCS to see the results.
 
 \section*{References}

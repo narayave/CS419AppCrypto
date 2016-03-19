@@ -171,32 +171,29 @@ The Lamport+ Hash Tree incorporates both the Lamport+ hash chains, and Merkle Ha
 	\item $N : \{0,1\}^{n+m}$, stands for Node
 \end{itemize}
 \textbf{\underline{Key Generation}}\\
-Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$ number of Lamport+ hash chains. The hash chains now need to be created. The following equation shows to construct inner nodes. The leaf nodes will be the hashes of the public key of the hash chains, which is the last set of keys in the chain.\\
+Begin by choosing an $H \geq 1$ variable first. This will allow us to have $2^H$ number of Lamport+ hash chains. The hash chains now need to be created to continue following the algorithm. The following equation shows to construct inner nodes. The leaf nodes will be the hashes of the public key of the hash chains initially. The leaves will change once signatures are generated.\\
 \textbf{Input:} $2^H$ hashed public keys of Lamport+ hash chains\\
 \textbf{Output:} Lamport+ Hash Tree
 \begin{equation}
 \begin{split}
-%TODO: Make sure that i looks correct
-N_{i,h} & = f_k((N_{i,h-1} \oplus g(s_0))||(N_{i+1,h-1} \oplus g(s_1))) || s \\
+N_{i,h} & = f_k((N_{2i,h-1} \oplus g(s_{2i,h-1}))||(N_{2i+1,h-1} \oplus g(s_{2i+1,h-1}))) || s_{i,h} \\
 & \textrm{where }0\leq i <2^H, 0 \leq h < H
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Generation}}\\
-Once a signature is formed, the tree needs to be recalculated, as one of the leaves is going to store a new public key for one of the chains. All nodes on authentication path will be recalculated basically. New seeds stored for parent nodes? Seeds generated every time path needs to be reconstructed.\\
-Before producing signature from a particular chain, make sure $l > 0$, because $l$ dictates how many signatures can be produced from that chain.\\
-\textbf{Input:} Hashed message M\\
-\textbf{Output:} Authentication path A, signature $\sigma$, index i
+A signature is first derived the lamport chain, and the tree is reconstructed to take into account the signature. Every time the tree is reconstructed, a new $s \xleftarrow{\$} \{0,1\}^m$ is generated. $A$ is a list of sibling nodes on the path to the tree root. It's important to remember that once a signature is derived, another shouldn't be generated until the first one has been verified. If there is another generated, then the first signature will not properly verify.\\
+\textbf{Input:} Hashed message M, lamport chain $l_i$\\
+\textbf{Output:} Authentication path A, signature $\sigma_i$, index i
 \begin{equation}
 \begin{split}
-P & = (P_{i,0},...,P_{0,H-1})\\
-%P_{i,h} & = (P_{i,0},...,P_{0,H-1})\\
-A & = (A_0,...,A_{H-1})\\
-%A_h & = 
-%\begin{cases}
-%f_k(P_{h-1}||a_{h-1} \oplus s), & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
-%f_k(a_{h-1}||P_{h-1} \oplus s), & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
-%\end{cases}
-%\\P_0 & = N_{i,0}
+\textrm{if }l_i & > 0, \textrm{ continue, else } i = i+1,\textrm{ start over}\\
+\sigma_i & = (x^{M_1,l-1}_1, ..., x^{M_n,l-1}_n)\\
+N_{i,h} & = 
+\begin{cases}
+f_k(\sigma_i||(N_{2i+1,h-1} \oplus g(s_{2i+1,h-1})))||s_{i,h} & ,\textrm{left child} \\
+f_k((N_{2i,h-1} \oplus g(s_{2i,h-1}))||\sigma_i)||s_{i,h} & ,\textrm{right child}
+\end{cases}
+\\A & = (A_0,...,A_{H-1})\\
 \end{split}
 \end{equation}
 \textbf{\underline{Signature Verification}}\\
@@ -207,8 +204,8 @@ There are two main steps to look out for here. First, using the secret key to ve
 \begin{split}
 P_h & =
 \begin{cases}
-f_k((P_{h-1} \oplus g(s))||(a_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
-f_k((a_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
+f_k((P_{h-1} \oplus g(s))||(A_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 0 \textrm{ mod }2;\\
+f_k((A_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{\frac{i}{2^h}} \equiv 1 \textrm{ mod }2;
 \end{cases}
 \\ & \textrm{where }0 < h < H
 \\P_0 & = N_{i,0}
@@ -221,6 +218,7 @@ f_k((a_{h-1} \oplus g(s))||(P_{h-1} \oplus g(s))) \oplus s, & \textrm{if}\floor{
 \subsection*{Security Considerations}
 Briefly talk about where and the idea for Lamport+ came about. Why are random values XORed? Key Scheduling and smaller key sizes\\ \\
 Hash tree, new random values generated every time so adversary can't just use previous random values. Since we are going level by level, after half the signatures are produced, an adversary could have a hash already that they try to break with a second preimage.
+Before next 
 
 \section*{Conclusion}
 While an implementation for Lamport+ Hash Tree was created, it definitely can be made better. Given enough time, the algorithm could be optimized to not only be faster, but cut down on costs, and even make a smaller memory footprint. This isn't entirely a promise, but a potential future work that would be worth investing time in.\\ \\

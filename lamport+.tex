@@ -232,7 +232,7 @@ XLH_{K,K_1,...,K_{j-1}}(M_1,...,M_{j-1}) & \neq XLH_{K,K_1,...,K_{j-1}}(M'_1,...
 \end{split}
 \end{equation}
 
-Like mentioned, WOTS+ makes use of XORing random values. From our understanding, it didn't need to incorporated at all, however it does make the scheme more secure. While there is a small overlapping piece, having to work with hashing, we don't see a significant necessity for the trick other than to make the scheme more secure.
+Like mentioned, WOTS+ makes use of XORing random values. From our understanding, it didn't need to incorporated at all, however it does make the scheme more secure. While there are small overlapping pieces, like hashing values, we don't see a significant necessity for the trick other than to make the scheme a little more unpredictable.
 
 \section*{Conclusion}
 We presented the Lamport+ Signature Scheme along with hash chains and hash trees in this report. The scheme itself is much simpler than both WOTS and WOTS+. The complications arrive when trying to integrate Lamport+ with the Merkle hash trees. Often, hash trees only have one entry for a field, but the nature of a Lamport scheme that's not entirely the case. Based on our algorithm, it is possible to a certain degree, but it's not efficient by any chance. The hash tree algorithm can definitely b more optimized to not only be faster, but costs could be cut doen, and even make a smaller memory footprint. This isn't entirely a promise, but potential future work that would be worth investing time in.
